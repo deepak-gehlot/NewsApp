@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">NewsApp</string>
+    <string name="api_key">5c4ad3fcc8b14e6b9b4e6c312af065fc</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 </resources>

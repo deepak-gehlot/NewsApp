@@ -1,6 +1,5 @@
 package com.news.newsapp.view.activity
 
-import android.animation.Animator
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -32,13 +31,12 @@ class HomeActivity : AppCompatActivity(), ViewAnimator.ViewAnimatorListener {
     private val list = ArrayList<SlideMenuItem>()
     private var contentFragment: ContentFragment? = null
     private var viewAnimator: ViewAnimator<*>? = null
-    private var res = R.color.colorAccent
     private var linearLayout: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        contentFragment = ContentFragment.newInstance(R.drawable.content_music)
+        contentFragment = ContentFragment.newInstance(ContentFragment.BUSINESS)
         supportFragmentManager.beginTransaction()
                 .replace(R.id.content_frame, contentFragment)
                 .commit()
@@ -54,22 +52,23 @@ class HomeActivity : AppCompatActivity(), ViewAnimator.ViewAnimatorListener {
     }
 
     private fun createMenuList() {
-        val menuItem0 = SlideMenuItem(ContentFragment.CLOSE, R.drawable.icn_close)
+        val menuItem0 = SlideMenuItem(ContentFragment.CLOSE, R.drawable.close_icon)
         list.add(menuItem0)
-        val menuItem = SlideMenuItem(ContentFragment.BUILDING, R.drawable.icn_1)
-        list.add(menuItem)
-        val menuItem2 = SlideMenuItem(ContentFragment.BOOK, R.drawable.icn_2)
-        list.add(menuItem2)
-        val menuItem3 = SlideMenuItem(ContentFragment.PAINT, R.drawable.icn_3)
-        list.add(menuItem3)
-        val menuItem4 = SlideMenuItem(ContentFragment.CASE, R.drawable.icn_4)
-        list.add(menuItem4)
-        val menuItem5 = SlideMenuItem(ContentFragment.SHOP, R.drawable.icn_5)
-        list.add(menuItem5)
-        val menuItem6 = SlideMenuItem(ContentFragment.PARTY, R.drawable.icn_6)
-        list.add(menuItem6)
-        val menuItem7 = SlideMenuItem(ContentFragment.MOVIE, R.drawable.icn_7)
+        val menuItem7 = SlideMenuItem(ContentFragment.BITCOIN, R.drawable.bitcoin_icon)
         list.add(menuItem7)
+        val menuItem = SlideMenuItem(ContentFragment.BUSINESS, R.drawable.business_icon)
+        list.add(menuItem)
+        val menuItem2 = SlideMenuItem(ContentFragment.ENTERTAINMENT, R.drawable.entertainment_icon)
+        list.add(menuItem2)
+        val menuItem3 = SlideMenuItem(ContentFragment.HEALTH, R.drawable.health_icon)
+        list.add(menuItem3)
+        val menuItem4 = SlideMenuItem(ContentFragment.SCIENCE, R.drawable.science_icon)
+        list.add(menuItem4)
+        val menuItem5 = SlideMenuItem(ContentFragment.SPORTS, R.drawable.sport_icon)
+        list.add(menuItem5)
+        val menuItem6 = SlideMenuItem(ContentFragment.TECHNOLOGY, R.drawable.technology_icon)
+        list.add(menuItem6)
+
     }
 
 
@@ -118,7 +117,17 @@ class HomeActivity : AppCompatActivity(), ViewAnimator.ViewAnimatorListener {
     }
 
     private fun replaceFragment(screenShotable: ScreenShotable, topPosition: Int): ScreenShotable {
-        this.res = if (this.res == R.color.colorAccent) R.color.colorPrimary else R.color.colorAccent
+        var tag = ""
+        when (topPosition) {
+            0 -> tag = ContentFragment.CLOSE
+            1 -> tag = ContentFragment.BITCOIN
+            2 -> tag = ContentFragment.BUSINESS
+            3 -> tag = ContentFragment.ENTERTAINMENT
+            4 -> tag = ContentFragment.HEALTH
+            5 -> tag = ContentFragment.SCIENCE
+            6 -> tag = ContentFragment.SPORTS
+            7 -> tag = ContentFragment.TECHNOLOGY
+        }
         val view = findViewById<View>(R.id.content_frame)
         val finalRadius = Math.max(view.width, view.height)
         val animator = ViewAnimationUtils.createCircularReveal(view, 0, topPosition, 0f, finalRadius.toFloat())
@@ -128,7 +137,7 @@ class HomeActivity : AppCompatActivity(), ViewAnimator.ViewAnimatorListener {
         findViewById<View>(R.id.content_overlay).background = BitmapDrawable(resources, screenShotable
                 .bitmap)
         animator.start()
-        val contentFragment = ContentFragment.newInstance(this.res)
+        val contentFragment = ContentFragment.newInstance(tag)
         supportFragmentManager.beginTransaction().replace(R.id.content_frame, contentFragment).commit()
         return contentFragment
     }

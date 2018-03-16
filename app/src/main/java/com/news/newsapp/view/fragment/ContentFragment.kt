@@ -11,34 +11,40 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.news.newsapp.R
+import com.news.newsapp.adapter.NewsListAdapter
+import com.news.newsapp.api.APIClient
+import com.news.newsapp.api.Api
+import com.news.newsapp.api.response.Response
 import com.news.newsapp.databinding.FragmentMainBinding
+import com.news.newsapp.util.Utils
+import retrofit2.Call
+import retrofit2.Callback
 
 import yalantis.com.sidemenu.interfaces.ScreenShotable
+import java.util.ArrayList
 
-/**
- * Created by Konstantin on 22.12.2014.
- */
 class ContentFragment : Fragment(), ScreenShotable {
 
     private var mBinding: FragmentMainBinding? = null
-    protected var res: Int = 0
+    private var res: String = ""
     private var bitmap: Bitmap? = null
-
+    private var mCountry: String = ""
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setRecyclerView()
+        getNewsList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        res = arguments.getInt(Int::class.java.name)
+        res = arguments.getString(String::class.java.name)
+        mCountry = Utils.getCurrentLocale(activity).country
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         mBinding = DataBindingUtil.inflate(inflater!!, R.layout.fragment_main, container, false)
-        mBinding!!.recyclerView.setBackgroundColor(res)
+        //mBinding!!.recyclerView.setBackgroundColor(res)
         return mBinding!!.root
     }
 
@@ -61,27 +67,45 @@ class ContentFragment : Fragment(), ScreenShotable {
         return bitmap
     }
 
-    private fun setRecyclerView() {
-        /* mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        NewsListAdapter newsListAdapter = new NewsListAdapter(getActivity());
-        mBinding.recyclerView.setAdapter(newsListAdapter);*/
+    private fun getNewsList() {
+        val api = APIClient.getClient().create(Api::class.java)
+        val responseCall = api.getTopHeadLines(mCountry, res)
+        responseCall.enqueue(object : Callback<Response> {
+            override fun onResponse(call: Call<Response>?, response: retrofit2.Response<Response>?) {
+                handleResponse(response?.body())
+            }
+
+            override fun onFailure(call: Call<Response>?, t: Throwable?) {
+
+            }
+        })
+    }
+
+    fun handleResponse(response: Response?) {
+        setRecyclerView(response!!.articleArrayList)
+    }
+
+    private fun setRecyclerView(arrayList: ArrayList<Response.Article>) {
+        mBinding?.recyclerView?.layoutManager = LinearLayoutManager(activity)
+        val newsListAdapter = NewsListAdapter(activity, arrayList)
+        mBinding?.recyclerView?.adapter = newsListAdapter
     }
 
     companion object {
 
         val CLOSE = "Close"
-        val BUILDING = "Building"
-        val BOOK = "Book"
-        val PAINT = "Paint"
-        val CASE = "Case"
-        val SHOP = "Shop"
-        val PARTY = "Party"
-        val MOVIE = "Movie"
+        val BUSINESS = "business"
+        val ENTERTAINMENT = "Entertainment"
+        val HEALTH = "Health"
+        val SCIENCE = "Science"
+        val SPORTS = "Sports"
+        val TECHNOLOGY = "Technology"
+        val BITCOIN = "Bitcoin"
 
-        fun newInstance(resId: Int): ContentFragment {
+        fun newInstance(type: String): ContentFragment {
             val contentFragment = ContentFragment()
             val bundle = Bundle()
-            bundle.putInt(Int::class.java.name, resId)
+            bundle.putString(String::class.java.name, type)
             contentFragment.arguments = bundle
             return contentFragment
         }

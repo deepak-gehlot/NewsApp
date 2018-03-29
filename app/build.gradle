@@ -55,4 +55,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.googlecode.android-query:android-query:0.25.9'
+    implementation 'com.android.support:customtabs:26.1.0'
 }

@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.news.newsapp.R
 import com.news.newsapp.adapter.NewsListAdapter
 import com.news.newsapp.api.APIClient
@@ -19,9 +18,8 @@ import com.news.newsapp.databinding.FragmentMainBinding
 import com.news.newsapp.util.Utils
 import retrofit2.Call
 import retrofit2.Callback
-
 import yalantis.com.sidemenu.interfaces.ScreenShotable
-import java.util.ArrayList
+import java.util.*
 
 class ContentFragment : Fragment(), ScreenShotable {
 
@@ -37,7 +35,7 @@ class ContentFragment : Fragment(), ScreenShotable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        res = arguments.getString(String::class.java.name)
+        res = arguments.getString("tag")
         mCountry = Utils.getCurrentLocale(activity).country
     }
 
@@ -105,7 +103,7 @@ class ContentFragment : Fragment(), ScreenShotable {
         fun newInstance(type: String): ContentFragment {
             val contentFragment = ContentFragment()
             val bundle = Bundle()
-            bundle.putString(String::class.java.name, type)
+            bundle.putString("tag", type)
             contentFragment.arguments = bundle
             return contentFragment
         }

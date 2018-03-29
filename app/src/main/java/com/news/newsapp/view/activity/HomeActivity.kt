@@ -11,17 +11,14 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.widget.LinearLayout
-
 import com.news.newsapp.R
 import com.news.newsapp.view.fragment.ContentFragment
-
-import java.util.ArrayList
-
 import io.codetail.animation.ViewAnimationUtils
 import yalantis.com.sidemenu.interfaces.Resourceble
 import yalantis.com.sidemenu.interfaces.ScreenShotable
 import yalantis.com.sidemenu.model.SlideMenuItem
 import yalantis.com.sidemenu.util.ViewAnimator
+import java.util.*
 
 
 class HomeActivity : AppCompatActivity(), ViewAnimator.ViewAnimatorListener {
@@ -116,18 +113,7 @@ class HomeActivity : AppCompatActivity(), ViewAnimator.ViewAnimatorListener {
         drawerToggle!!.onConfigurationChanged(newConfig)
     }
 
-    private fun replaceFragment(screenShotable: ScreenShotable, topPosition: Int): ScreenShotable {
-        var tag = ""
-        when (topPosition) {
-            0 -> tag = ContentFragment.CLOSE
-            1 -> tag = ContentFragment.BITCOIN
-            2 -> tag = ContentFragment.BUSINESS
-            3 -> tag = ContentFragment.ENTERTAINMENT
-            4 -> tag = ContentFragment.HEALTH
-            5 -> tag = ContentFragment.SCIENCE
-            6 -> tag = ContentFragment.SPORTS
-            7 -> tag = ContentFragment.TECHNOLOGY
-        }
+    private fun replaceFragment(screenShotable: ScreenShotable, topPosition: Int, slideMenuItem: Resourceble): ScreenShotable {
         val view = findViewById<View>(R.id.content_frame)
         val finalRadius = Math.max(view.width, view.height)
         val animator = ViewAnimationUtils.createCircularReveal(view, 0, topPosition, 0f, finalRadius.toFloat())
@@ -137,7 +123,7 @@ class HomeActivity : AppCompatActivity(), ViewAnimator.ViewAnimatorListener {
         findViewById<View>(R.id.content_overlay).background = BitmapDrawable(resources, screenShotable
                 .bitmap)
         animator.start()
-        val contentFragment = ContentFragment.newInstance(tag)
+        val contentFragment = ContentFragment.newInstance(slideMenuItem.name)
         supportFragmentManager.beginTransaction().replace(R.id.content_frame, contentFragment).commit()
         return contentFragment
     }
@@ -145,7 +131,7 @@ class HomeActivity : AppCompatActivity(), ViewAnimator.ViewAnimatorListener {
     override fun onSwitch(slideMenuItem: Resourceble, screenShotable: ScreenShotable, position: Int): ScreenShotable {
         when (slideMenuItem.name) {
             ContentFragment.CLOSE -> return screenShotable
-            else -> return replaceFragment(screenShotable, position)
+            else -> return replaceFragment(screenShotable, position, slideMenuItem)
         }
     }
 

@@ -3,13 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <variable
+            name="adapter"
+            type="com.news.newsapp.adapter.NewsListAdapter" />
+
         <variable
             name="model"
-            type="com.news.newsapp.api.response.Response.Article"/>
+            type="com.news.newsapp.api.response.Response.Article" />
     </data>
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="210dp"
         android:clipChildren="true"
         app:cardElevation="6dp"
         app:cardPreventCornerOverlap="true"
@@ -20,12 +26,25 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageView"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background" />
+                android:layout_height="wrap_content"
+                android:onClick="@{()->adapter.onItemClick(model)}">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:scaleType="centerCrop"
+                    app:postImageUrl="@{model.urlToImage}" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,16 +52,16 @@
                 android:layout_alignParentBottom="true"
                 android:background="@color/trancparent"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/textViewTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start"
-                    android:text="Largest US radio company iHeartMedia files for bankruptcy"
+                    android:text="@{model.title}"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
